@@ -17,16 +17,21 @@ if (config.use_env_variable) {
         config.database,
         config.username,
         config.password,
-        {
-            host: config.host,   // Ensure the host is correctly passed
-            dialect: config.dialect,
-            ...config
+        { 
+            ...config, 
+            define: { 
+                ...config.define, 
+                underscored: true, // Use underscored globally
+                timestamps: true,   // Enable timestamps globally
+            } 
         }
     );
 }
 
+
 db.Category = require('./category')(sequelize, Sequelize.DataTypes);
 db.New = require('./news')(sequelize, Sequelize.DataTypes);
+db.Product = require('./product')(sequelize,Sequelize.DataTypes);
 
 db.Category.hasMany(db.New, { foreignKey: 'category_id', as: 'news', onDelete: 'CASCADE' });
 db.New.belongsTo(db.Category, { foreignKey: 'category_id', as: 'category' });

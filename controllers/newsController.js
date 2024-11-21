@@ -9,7 +9,7 @@ exports.readlist = async (req,res) => {
         const NewList = await New.findAll({});
         res.json(NewList);
         if (!NewList) {
-            return res.status(400).json({ message: 'News dont found' });
+            return res.status(400).json({ message: 'A news not found' });
         }
     } catch (err) {
         console.log(err)
@@ -29,7 +29,7 @@ exports.getnewByID = async (req,res) => {
             }
         });
         if (!NewData) {
-            return res.status(400).json({ message: 'ID not found' });
+            return res.status(400).json({ message: 'A new ID not found' });
         }
         res.json(NewData);
     } catch (err) {
@@ -42,13 +42,13 @@ exports.getnewByID = async (req,res) => {
 
 // create a new 
 exports.createnew = async (req, res) => {
-    const { title, description, post_by, count_view, img, category_id } = req.body;
+    const { title, description, post_by, count_view, image, category_id } = req.body;
     try {
         const category = await Category.findByPk(category_id);
         if (!category) {
             return res.status(400).json({ message: 'Invalid category ID' });
         }
-        if (!title || !description || !post_by) { // check required fields must have in body 
+        if (!title || !description || !post_by || !image || !category_id) { // check required fields must have in body 
             return res.status(401).json({
                 message: 'Missing required fields'
             });
@@ -60,7 +60,7 @@ exports.createnew = async (req, res) => {
             description,
             post_by,
             count_view,
-            img,
+            image,
             category_id
         });
         res.status(201).json(newData);
@@ -121,15 +121,35 @@ exports.createcategory = async (req, res) => {
     }
 };
 
-
-// exports.readcategory = async (req, res) => {
-//     try {
-//         const categoryList = await Category.findAll({});
-//         res.json(categoryList);
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).json({
-//             message: 'server failed'
-//       });
-//     }
-// };
+exports.readcategory = async (req, res) => {
+    try {
+        const categoryList = await Category.findAll({});
+        if (!categoryList) {
+            return res.status(400).json({ message: 'Categories not found' });
+        }
+        res.json(categoryList);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'server failed'
+      });
+    }
+};
+exports.getcategoryByID = async (req, res) => {
+    try {
+        const categoryData = await Category.findOne({ // find a new id 
+            where: {
+                id:req.params.id
+            }
+        });
+        if (!categoryData) {
+            return res.status(400).json({ message: 'Category ID not found' });
+        }
+        res.json(categoryData);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'server failed'
+      });
+    }
+};

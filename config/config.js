@@ -1,12 +1,11 @@
-
-
+require('dotenv').config()
 module.exports = {
   development: {
-    username: 'root', // กำหนดเป็น root
-    password: 'dssi@ubu', // รหัสผ่านที่คุณให้มา
-    database: 'api_news', // ชื่อฐานข้อมูล
-    host: '127.0.0.1',
-    port: 3306, // พอร์ต MySQL
+    username: process.env.DB_USER, // กำหนดเป็น root
+    password: process.env.DB_PASS, // รหัสผ่านที่คุณให้มา
+    database: process.env.DB_NAME, // ชื่อฐานข้อมูล
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT, // พอร์ต MySQL
     dialect: 'mysql',
     dialectOptions: {
       charset: 'utf8mb4', // รองรับ Unicode
